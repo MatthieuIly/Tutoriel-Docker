@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  traefik:
+    image: traefik
+    # command: --api.insecure=true --providers.docker=true
+    command: --api.insecure=true 
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      # - ./traefik.toml:/etc/traefik/traefik.toml
+    networks:
+      - webgateway
+networks:
+  webgateway:
+    driver: bridge
+

@@ -1,0 +1,18 @@
+[acesslog]
+[api]
+  insecure=true
+  dashboard=true
+  debug=true
+[log]
+  level="INFO"
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[providers.file]
+  directory = "/home/mily/services/"
+  watch = true
+
+[providers.docker]
+  endpoint = "unix:///var/run/docker.sock"
+
