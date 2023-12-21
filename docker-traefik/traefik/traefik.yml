@@ -2,10 +2,30 @@
 
 # Docker configuration backend
 providers:
+  # file:
+  #   directory: "/etc/traefik/config/my_dynamic_conf/"
+  #   watch: true
   docker: 
     defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: true
+    watch: true
 
 # API and dashboard configuration
 api:
   insecure: true
+  debug: true
+  dashboard: true
 
+entryPoints:
+  # mysql:
+  #   address: ":3306"
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+tls:
+  certificates:
+    - certFile: /etc/traefik/config/certs/traefik.crt
+    - keyFile: /etc/traefik/config/certs/traefik.key

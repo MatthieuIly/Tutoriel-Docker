@@ -1,0 +1,11 @@
+http:
+  routers:
+    docaposte_route:
+      entryPoints: ["apache"]
+      service: "docaposte"
+      rule: "Path(`/`)"
+  services:
+    docaposte:
+      loadBalancer:
+        servers:
+          url: "http://127.0.0.1:8081"

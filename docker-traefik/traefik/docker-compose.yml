@@ -1,15 +1,35 @@
 version: "3.8"
 services:
   traefik:
+    # restart: always
     image: traefik
     # command: --api.insecure=true --providers.docker=true
-    command: --api.insecure=true 
+    command: 
+      # Logging configuration
+      - --log.level=debug
+      - --log.format=json
+      - "--api.insecure=true"
+      # Entrypoints configuration
+      # - "--entrypoints.web.address=:80"
+      ## Create a new entrypoint called `websecure` that is going to be used for TLS
+      # - --entrypoints.websecure.address=:443
+      ## Forces redirection of incoming requests from `web` to `websecure` entrypoint
+      ## https://doc.traefik.io/traefik/routing/entrypoints/#redirection
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      # - "--entrypoints.mysql.address=:3306" 
+      # File provider configuration
+      - --providers.file.directory=/etc/traefik/config/my_dynamic_conf
     ports:
-      - "80:80"
-      - "8080:8080"
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 3306:3306
     volumes:
+      - ./certs/traefik:/etc/traefik/config/certs:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./services:/etc/traefik/services
+      - ./config.yml:/etc/traefik/config/my_dynamic_conf/conf.yml:ro
       # - ./traefik.toml:/etc/traefik/traefik.toml
     networks:
       - webgateway
